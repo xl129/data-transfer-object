@@ -41,6 +41,17 @@ class DataTransferObjectProperty
 
     public function setValue(mixed $value): void
     {
+        $pType = $this->reflectionProperty->getType();
+        if ($pType !== null) {
+            $type = $pType->getName();
+            if (in_array(
+                $type,
+                ["bool", "boolean", "int", "integer", "float", "double", "string", "array", "object", "null"]
+            )) {
+                settype($value, $type);
+            }
+        }
+
         if ($this->caster && $value !== null) {
             $value = $this->caster->cast($value);
         }
